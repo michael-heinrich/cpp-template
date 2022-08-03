@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source util/constants
+
+docker run --rm -w=/home -v $(pwd):/home -u $(id -u):$(id -g) gcc:latest \
+        make -j -f Makefile.mk CONFIG_NAME="gcc-latest" BINARY_NAME="${BINARY_NAME}" "$@"

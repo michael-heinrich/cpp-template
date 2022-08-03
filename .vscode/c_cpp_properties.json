@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "src/**",
+                "${default}",
+                "${workspaceFolder}/**"
+            ],
+             "defines": [
+                "STANDARD_PLUGINS=1"
+            ],
+            "compileCommands": "${default}",
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": "${default}",
+                "path": [
+                    "${default}",
+                    "src/**"
+                ]
+            },
+            "intelliSenseMode": "gcc-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "compilerPath": "${default}"
+        }
+    ],
+    "version": 4
+  }

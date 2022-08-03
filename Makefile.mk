@@ -12,7 +12,7 @@ BIN_BASE=bin
 LIB_DIR=lib
 BUILD_DIR=${BUILD_BASE}/${CONFIG_NAME}
 BIN_DIR=${BIN_BASE}/${CONFIG_NAME}
-BINARY_NAME=hello_world
+BINARY_NAME=binary
 
 
 ###############################################################################
@@ -60,7 +60,7 @@ build: .build-post
 build-clean: clean build
 
 .clean-subproject:
-# "${MAKE}" -C ${STREAM_MANGER_ROOT} -f Makefile.mk clean
+# "${MAKE}" -C ${SUBPROJECT_ROOT} -f Makefile.mk clean
 
 .build-post: .list-includes .build-impl
 # Add your post 'build' code here...

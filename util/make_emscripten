@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source util/constants
+
+docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emscripten/emsdk emmake \
+        make -j -f Makefile.mk CONFIG_NAME="emscripten" BINARY_NAME="${BINARY_NAME}.js" "$@"
