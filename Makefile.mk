@@ -24,6 +24,8 @@ BINARY_NAME=hello_world
 MKDIR=mkdir
 LDLIBSOPTIONS=-lpthread -ldl
 OPTIMIZATION=-O3
+C_STANDARD=c11
+CPP_STANDARD=c++17
 
 ###############################################################################
 #
@@ -83,14 +85,14 @@ ${BUILD_DIR}/%.c.o: ${SOURCE_ROOT}/%.c
 	${RM} "$@.d"
 	@echo $(PWD)
 	echo "compile $(patsubst ${BUILD_DIR}/%.c.o,${SOURCE_ROOT}/%.c,$@)"
-	$(COMPILE.c) ${OPTIMIZATION} -Wall ${INCLUDES} -std=c11 -MMD -MP -MF "$@.d" -o $@ $(patsubst ${BUILD_DIR}/%.c.o,${SOURCE_ROOT}/%.c,$@)
+	$(COMPILE.c) ${OPTIMIZATION} -Wall ${INCLUDES} -std=${C_STANDARD} -MMD -MP -MF "$@.d" -o $@ $(patsubst ${BUILD_DIR}/%.c.o,${SOURCE_ROOT}/%.c,$@)
 
 ${BUILD_DIR}/%.cpp.o: ${SOURCE_ROOT}/%.cpp
 	${MKDIR} -p $(dir $@)
 	${RM} "$@.d"
 	@echo $(PWD)
 	echo "compile $(patsubst ${BUILD_DIR}/%.cpp.o,${SOURCE_ROOT}/%.cpp,$@)"
-	$(COMPILE.cc) ${OPTIMIZATION} -Wall ${INCLUDES} -std=c++17 -MMD -MP -MF "$@.d" -o $@ $(patsubst ${BUILD_DIR}/%.cpp.o,${SOURCE_ROOT}/%.cpp,$@)
+	$(COMPILE.cc) ${OPTIMIZATION} -Wall ${INCLUDES} -std=${CPP_STANDARD} -MMD -MP -MF "$@.d" -o $@ $(patsubst ${BUILD_DIR}/%.cpp.o,${SOURCE_ROOT}/%.cpp,$@)
 
 
 ${BIN_DIR}/${BINARY_NAME}: ${SUBPROJECT_BINARY}  .compile-sources
