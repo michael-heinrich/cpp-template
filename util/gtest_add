@@ -1,3 +1,4 @@
 #!/bin/bash
 
 git submodule add https://github.com/google/googletest.git googletest/
+git submodule update --recursive --init
