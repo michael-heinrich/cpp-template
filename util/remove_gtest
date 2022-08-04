@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rm -rf googletest/
+git rm googletest/
