@@ -5,13 +5,14 @@
 ###############################################################################
 
 CONFIG_NAME=release
-SOURCE_ROOT=googletest/googletest/src
-INCLUDE_ROOT=googletest/googletest/include
-BUILD_BASE=build/googletest
-BIN_BASE=lib
-BUILD_DIR=${BUILD_BASE}/${CONFIG_NAME}
-BIN_DIR=${BIN_BASE}/${CONFIG_NAME}
-BINARY_NAME=googletest
+GTEST_SRC=googletest/googletest/src
+GTEST_INCLUDE=googletest/googletest/include
+GTEST_BUILD_BASE=build/googletest
+GTEST_BIN_BASE=lib
+GTEST_BUILD_DIR=${GTEST_BUILD_BASE}/${CONFIG_NAME}
+GTEST_BIN_DIR=${GTEST_BIN_BASE}/${CONFIG_NAME}
+GTEST_LIB_NAME=libgtest.a
+GTEST_LIB_MAIN_NAME=libgtest_main.a
 
 
 ###############################################################################
@@ -20,11 +21,10 @@ BINARY_NAME=googletest
 #
 ###############################################################################
 
-MKDIR=mkdir
-LDLIBSOPTIONS=-lpthread -ldl
-OPTIMIZATION=-O3
-C_STANDARD=c11
-CPP_STANDARD=c++17
+GTEST_MKDIR=mkdir
+GTEST_AR_OPTIONS=rcs
+GTEST_OPTIMIZATION=-Og
+GTEST_CPP_STANDARD=c++17
 
 ###############################################################################
 #
@@ -32,16 +32,24 @@ CPP_STANDARD=c++17
 #
 ###############################################################################
 
+LIB_GTEST_MAIN_SOURCES= ${GTEST_SRC}/gtest_main.cc
+LIB_GTEST_SOURCES= \
+    ${GTEST_SRC}/gtest-assertion-result.cc \
+	${GTEST_SRC}/gtest-death-test.cc \
+	${GTEST_SRC}/gtest-filepath.cc \
+	${GTEST_SRC}/gtest-matchers.cc \
+	${GTEST_SRC}/gtest-port.cc \
+	${GTEST_SRC}/gtest-printers.cc \
+	${GTEST_SRC}/gtest-test-part.cc \
+	${GTEST_SRC}/gtest-typed-test.cc \
+	${GTEST_SRC}/gtest.cc \
 
-CPP_SOURCES=$(shell find ${SOURCE_ROOT} -name "*.cpp")
-C_SOURCES=$(shell find ${SOURCE_ROOT} -name "*.c")
+LIB_GTEST_MAIN_OBJECTS = $(patsubst ${GTEST_SRC}/%.cc,${GTEST_BUILD_DIR}/%.cc.o,${LIB_GTEST_MAIN_SOURCES})
+LIB_GTEST_OBJECTS = $(patsubst ${GTEST_SRC}/%.cc,${GTEST_BUILD_DIR}/%.cc.o,${LIB_GTEST_SOURCES})
+GTEST_OBJECT_FILES= ${LIB_GTEST_MAIN_OBJECTS} ${LIB_GTEST_OBJECTS}
 
-OBJECT_FILES= $(patsubst ${SOURCE_ROOT}/%.cpp,${BUILD_DIR}/%.cpp.o,${CPP_SOURCES}) $(patsubst ${SOURCE_ROOT}/%.c,${BUILD_DIR}/%.c.o,${C_SOURCES})
-
-H_SOURCES=$(shell find ${INCLUDE_ROOT} -name "*.h") $(shell find ${INCLUDE_ROOT} -name "*.hpp")
-
-H_DIRS= $(sort $(dir ${H_SOURCES} ${C_SOURCES} ${CPP_SOURCES}))
-INCLUDES=$(patsubst %,-I%,${H_DIRS})
+GTEST_H_DIRS= ${GTEST_INCLUDE} googletest/googletest
+GTEST_INCLUDES=$(patsubst %,-I%,${GTEST_H_DIRS})
 
 ###############################################################################
 #
@@ -49,54 +57,45 @@ INCLUDES=$(patsubst %,-I%,${H_DIRS})
 #
 ###############################################################################
 
-run: build
-	${BIN_DIR}/${BINARY_NAME}
-
 # build
-build: .build-post
+gtest-build: .gtest-build-post
 	echo "build succeeded"
 
-build-clean: clean build
-
-.clean-subproject:
-# "${MAKE}" -C ${SUBPROJECT_ROOT} -f Makefile.mk clean
-
-.build-post: .list-includes .build-impl
+.gtest-build-post: .gtest-list-includes .gtest-build-impl
 # Add your post 'build' code here...
 
-.list-includes:
-	echo "Includes are: ${INCLUDES}"
+.gtest-list-includes:
+	echo "Includes are: ${GTEST_INCLUDES}"
 
 # build
-.build-impl: ${BIN_DIR}/${BINARY_NAME}
+.gtest-build-impl: ${GTEST_BIN_DIR}/${GTEST_LIB_NAME} ${GTEST_BIN_DIR}/${GTEST_LIB_MAIN_NAME}
 
-.compile-sources: ${OBJECT_FILES}
+.gtest-compile-sources: ${GTEST_OBJECT_FILES}
 	echo "Compilation done"
 
-clean: .clean-subproject
-	echo "clean"
-	${RM} -rf ${BUILD_BASE}
-	${RM} -rf ${BIN_BASE}
+gtest-clean:
+	echo "gtest-clean"
+	${RM} -rf ${GTEST_BUILD_BASE}
+	${RM} -rf ${GTEST_BIN_BASE}
 
-
-${BUILD_DIR}/%.c.o: ${SOURCE_ROOT}/%.c
-	${MKDIR} -p $(dir $@)
+${GTEST_BUILD_DIR}/%.cc.o: ${GTEST_SRC}/%.cc
+	${GTEST_MKDIR} -p $(dir $@)
 	${RM} "$@.d"
 	@echo $(PWD)
-	echo "compile $(patsubst ${BUILD_DIR}/%.c.o,${SOURCE_ROOT}/%.c,$@)"
-	$(COMPILE.c) ${OPTIMIZATION} -Wall ${INCLUDES} -std=${C_STANDARD} -MMD -MP -MF "$@.d" -o $@ $(patsubst ${BUILD_DIR}/%.c.o,${SOURCE_ROOT}/%.c,$@)
+	echo "compile $(patsubst ${GTEST_BUILD_DIR}/%.cc.o,${GTEST_SRC}/%.cc,$@)"
+	$(COMPILE.cc) ${GTEST_OPTIMIZATION} -Wall ${GTEST_INCLUDES} -std=${GTEST_CPP_STANDARD} -MMD -MP -MF "$@.d" -o $@ $(patsubst ${GTEST_BUILD_DIR}/%.cc.o,${GTEST_SRC}/%.cc,$@)
 
-${BUILD_DIR}/%.cpp.o: ${SOURCE_ROOT}/%.cpp
-	${MKDIR} -p $(dir $@)
-	${RM} "$@.d"
+
+# libgtest.a
+${GTEST_BIN_DIR}/${GTEST_LIB_NAME}: .gtest-compile-sources
+	${GTEST_MKDIR} -p ${GTEST_BIN_DIR}
 	@echo $(PWD)
-	echo "compile $(patsubst ${BUILD_DIR}/%.cpp.o,${SOURCE_ROOT}/%.cpp,$@)"
-	$(COMPILE.cc) ${OPTIMIZATION} -Wall ${INCLUDES} -std=${CPP_STANDARD} -MMD -MP -MF "$@.d" -o $@ $(patsubst ${BUILD_DIR}/%.cpp.o,${SOURCE_ROOT}/%.cpp,$@)
+	ar ${GTEST_AR_OPTIONS} ${GTEST_BIN_DIR}/${GTEST_LIB_NAME} ${LIB_GTEST_OBJECTS} 
 
-
-${BIN_DIR}/${BINARY_NAME}: ${SUBPROJECT_BINARY}  .compile-sources
-	${MKDIR} -p ${BIN_DIR}
+# libgtest_main.a
+${GTEST_BIN_DIR}/${GTEST_LIB_MAIN_NAME}: .gtest-compile-sources
+	${GTEST_MKDIR} -p ${GTEST_BIN_DIR}
 	@echo $(PWD)
-	${LINK.cc} -o ${BIN_DIR}/${BINARY_NAME} ${OBJECT_FILES} ${SUBPROJECT_BINARY} ${LDLIBSOPTIONS}
+	ar ${GTEST_AR_OPTIONS} ${GTEST_BIN_DIR}/${GTEST_LIB_MAIN_NAME} ${LIB_GTEST_MAIN_OBJECTS} 
 
-PHONY: run build clean build-clean .build-post .build-impl
+PHONY: gtest-build gtest-clean gtest-build-clean .gtest-build-post .gtest-build-impl
