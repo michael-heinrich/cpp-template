@@ -1,4 +1,80 @@
 {
-	"version": "2.0.0",
-    
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-debug",
+            "type": "shell",
+            "command": "make build-debug",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "clear": true
+            }
+        },
+        {
+            "label": "build-debug-test",
+            "type": "shell",
+            "command": "make build-debug-test",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "clear": true
+            }
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "make run",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "clear": true
+            }
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "make test",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "clear": true
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "make clean",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "clear": true
+            }
+        }
+    ]
 }

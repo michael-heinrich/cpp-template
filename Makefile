@@ -30,6 +30,22 @@ build-test:
 			COVERAGE=true \
 			build-test
 
+build-debug-test:
+	make -j -f implementation.mk \
+			CONFIG_NAME=debug-test \
+			MAIN=gtest \
+			COVERAGE=true \
+			OPTIMIZATION=-g \
+			LINK_OPTIMIZATION=-g \
+			build-test
+
+build-debug:
+	make -j -f implementation.mk \
+			CONFIG_NAME=debug \
+			OPTIMIZATION=-g \
+			LINK_OPTIMIZATION=-g \
+			build
+
 ###############################################################################
 #
 #   extra targets for emscripten

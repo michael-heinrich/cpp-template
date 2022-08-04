@@ -7,8 +7,8 @@
                 "${default}",
                 "${workspaceFolder}/**"
             ],
-             "defines": [
-                "STANDARD_PLUGINS=1"
+            "defines": [
+                "${default}"
             ],
             "compileCommands": "${default}",
             "browse": {
@@ -26,4 +26,4 @@
         }
     ],
     "version": 4
-  }
+}
