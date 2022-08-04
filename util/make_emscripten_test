@@ -4,6 +4,8 @@ source util/constants
 
 docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emscripten/emsdk emmake \
         make -j -f implementation.mk \
-        CONFIG_NAME="emscripten" \
-        BINARY_NAME="${BINARY_NAME}.js" \
+        MAIN="gtest" \
+        CONFIG_NAME="emscripten-test" \
+        GTEST_OPTIMIZATION="-O1" \
+        TEST_BINARY_NAME="${BINARY_NAME}-test.js" \
         "$@"

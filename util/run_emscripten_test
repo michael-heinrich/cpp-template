@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source util/constants
+
+docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) node node "/src/bin/emscripten-test/${BINARY_NAME}-test.js" "$@"

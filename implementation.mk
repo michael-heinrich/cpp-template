@@ -17,6 +17,8 @@ BIN_DIR=${BIN_BASE}/${CONFIG_NAME}
 MAIN=application
 BINARY_NAME=binary
 TEST_BINARY_NAME=test-binary
+REPORTS_BASE=reports
+COVERAGE_REPORT=${REPORTS_BASE}/coverage.xml
 
 ###############################################################################
 #
@@ -26,6 +28,9 @@ TEST_BINARY_NAME=test-binary
 
 ifeq ($(MAIN),gtest)
 IGNORE_MAIN=-Dmain=ignore_main
+endif
+
+ifeq ($(COVERAGE),true)
 PROFILE_COMPILER= -ftest-coverage -fprofile-arcs
 PROFILE_LINKER= -fprofile-arcs
 else
@@ -37,7 +42,8 @@ include googletest.mk
 
 GTEST_LIB_PATH= -L${GTEST_BIN_DIR}
 GTEST_LIBS= -lgtest -lgtest_main
-GTEST_LINKER_OPTIONS= ${GTEST_LIB_PATH} ${GTEST_LIBS}
+#GTEST_LINKER_OPTIONS= ${GTEST_LIB_PATH} ${GTEST_LIBS}
+GTEST_LINKER_OPTIONS= ${LIB_GTEST_OBJECTS} ${LIB_GTEST_MAIN_OBJECTS}
 
 ###############################################################################
 #
@@ -103,7 +109,7 @@ build-clean: clean build
 	echo "Source compilation done"
 
 run-test: build-test
-	${BIN_DIR}/${TEST_BINARY_NAME}
+	${BIN_DIR}/${TEST_BINARY_NAME} --gtest_output="xml:${COVERAGE_REPORT}"
 
 build-test: .build-test-post
 	echo "build-test succeeded"
@@ -120,6 +126,7 @@ clean: .clean-subproject
 	echo "clean"
 	${RM} -rf ${BUILD_BASE}
 	${RM} -rf ${BIN_BASE}
+	${RM} -rf ${REPORTS_BASE}
 
 # create object files from c sources
 ${BUILD_DIR}/%.c.o: ${SOURCE_ROOT}/%.c

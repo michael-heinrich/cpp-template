@@ -90,12 +90,14 @@ ${GTEST_BUILD_DIR}/%.cc.o: ${GTEST_SRC}/%.cc
 ${GTEST_BIN_DIR}/${GTEST_LIB_NAME}: .gtest-compile-sources
 	${GTEST_MKDIR} -p ${GTEST_BIN_DIR}
 	@echo $(PWD)
-	ar ${GTEST_AR_OPTIONS} ${GTEST_BIN_DIR}/${GTEST_LIB_NAME} ${LIB_GTEST_OBJECTS} 
+	ar ${GTEST_AR_OPTIONS} ${GTEST_BIN_DIR}/${GTEST_LIB_NAME} ${LIB_GTEST_OBJECTS}
+	ranlib ${GTEST_BIN_DIR}/${GTEST_LIB_NAME}
 
 # libgtest_main.a
 ${GTEST_BIN_DIR}/${GTEST_LIB_MAIN_NAME}: .gtest-compile-sources
 	${GTEST_MKDIR} -p ${GTEST_BIN_DIR}
 	@echo $(PWD)
-	ar ${GTEST_AR_OPTIONS} ${GTEST_BIN_DIR}/${GTEST_LIB_MAIN_NAME} ${LIB_GTEST_MAIN_OBJECTS} 
+	ar ${GTEST_AR_OPTIONS} ${GTEST_BIN_DIR}/${GTEST_LIB_MAIN_NAME} ${LIB_GTEST_MAIN_OBJECTS}
+	ranlib ${GTEST_BIN_DIR}/${GTEST_LIB_MAIN_NAME}
 
 PHONY: gtest-build gtest-clean gtest-build-clean .gtest-build-post .gtest-build-impl
