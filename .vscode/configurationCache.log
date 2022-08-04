@@ -1,1 +1,0 @@
-{"buildTargets":["PHONY","build","build-debug","build-debug-test","build-emscripten","build-test","build-test-emscripten","clean","run","run-emscripten","test","test-emscripten"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
