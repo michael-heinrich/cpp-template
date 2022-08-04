@@ -1,4 +1,5 @@
 #!/bin/bash
 
 rm -rf googletest/
+rm -rf .git/modules/googletest/
 git rm googletest/
